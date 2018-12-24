@@ -1,0 +1,94 @@
+// See README.txt for information and build instructions.
+//
+// Note: START and END tags are used in comments to define sections used in
+// tutorials.  They are not part of the syntax for Protocol Buffers.
+//
+// To get an in-depth walkthrough of this file and the related examples, see:
+// https://developers.google.com/protocol-buffers/docs/tutorials
+
+// [START declaration]
+syntax = "proto3";
+package rpcmodel;
+
+// [END declaration]
+
+// [START java_declaration]
+option java_package = "com.example.tutorial";
+option java_outer_classname = "AddressBookProtos";
+// [END java_declaration]
+
+// [START csharp_declaration]
+option csharp_namespace = "Google.Protobuf.Examples.AddressBook";
+// [END csharp_declaration]
+
+// [START messages]
+message user {
+  string name = 1;
+  int32 password = 2;
+  int32 role = 3;
+  LevelType level = 4;
+  bool is_driver = 5;
+  addressType homeaddress = 6;
+
+
+  enum LevelType{
+    Default = 0;
+    Sun = 1;
+    Earth = 2;
+    Moon = 3;
+    Star = 4;
+  }
+
+  enum AddressStringType{
+    qingdao = 0;
+    beijing = 1;
+    shanghai = 2;
+  }
+
+  message addressType {
+    oneof test_oneof {
+      AddressStringType address = 4;
+      int32  name = 9;
+    }
+
+  }
+
+}
+
+
+message validate {
+  string xmlns=1;
+  repeated user user = 2;
+}
+
+message rpcRequest {
+
+    enum OpType{
+        Edit = 0;
+        Get = 1;
+    }
+
+    enum DBType{
+        running = 0;
+        candidate = 1;
+        startup = 2;
+    }
+
+    OpType operation = 1;
+    DBType db = 2;
+    validate validate =3;
+}
+
+message rpcReply {
+
+    bool result = 1;
+    string failReason = 2;
+    validate validate =3;
+}
+
+service Greeting {
+    // Sends a greeting
+    rpc ExecRPC (rpcRequest) returns (rpcReply) {}
+}
+
+// [END messages]
